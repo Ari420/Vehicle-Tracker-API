@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VTRACKERDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Location">
+    <Key>
+      <PropertyRef Name="LocationId" />
+    </Key>
+    <Property Name="LocationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Latitude" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Longitude" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="TimeStamp" Type="DateTime" Precision="3" />
+    <Property Name="CityName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="DeviceId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="VehicleDevice" Relationship="Self.FK_Location_VehicleDevice" FromRole="Location" ToRole="VehicleDevice" />
+  </EntityType>
+  <EntityType Name="Vehicle">
+    <Key>
+      <PropertyRef Name="VehicleId" />
+    </Key>
+    <Property Name="VehicleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VehicleName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="VehicleRegeisterNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="VehicleDevices" Relationship="Self.FK_VehicleDevice_Vehicle" FromRole="Vehicle" ToRole="VehicleDevice" />
+  </EntityType>
+  <EntityType Name="VehicleDevice">
+    <Key>
+      <PropertyRef Name="DeviceId" />
+    </Key>
+    <Property Name="DeviceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DeviceName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="VehicleId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Locations" Relationship="Self.FK_Location_VehicleDevice" FromRole="VehicleDevice" ToRole="Location" />
+    <NavigationProperty Name="Vehicle" Relationship="Self.FK_VehicleDevice_Vehicle" FromRole="VehicleDevice" ToRole="Vehicle" />
+  </EntityType>
+  <Association Name="FK_Location_VehicleDevice">
+    <End Role="VehicleDevice" Type="Self.VehicleDevice" Multiplicity="1" />
+    <End Role="Location" Type="Self.Location" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VehicleDevice">
+        <PropertyRef Name="DeviceId" />
+      </Principal>
+      <Dependent Role="Location">
+        <PropertyRef Name="DeviceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VehicleDevice_Vehicle">
+    <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+    <End Role="VehicleDevice" Type="Self.VehicleDevice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vehicle">
+        <PropertyRef Name="VehicleId" />
+      </Principal>
+      <Dependent Role="VehicleDevice">
+        <PropertyRef Name="VehicleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DBConnection" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Locations" EntityType="Self.Location" />
+    <EntitySet Name="Vehicles" EntityType="Self.Vehicle" />
+    <EntitySet Name="VehicleDevices" EntityType="Self.VehicleDevice" />
+    <AssociationSet Name="FK_Location_VehicleDevice" Association="Self.FK_Location_VehicleDevice">
+      <End Role="VehicleDevice" EntitySet="VehicleDevices" />
+      <End Role="Location" EntitySet="Locations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VehicleDevice_Vehicle" Association="Self.FK_VehicleDevice_Vehicle">
+      <End Role="Vehicle" EntitySet="Vehicles" />
+      <End Role="VehicleDevice" EntitySet="VehicleDevices" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

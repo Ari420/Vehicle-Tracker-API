@@ -1,0 +1,6 @@
+C:\Users\ari4r\source\repos\VehicleTrackingApi\GeoAssitant\bin\Debug\GeoAssitant.dll
+C:\Users\ari4r\source\repos\VehicleTrackingApi\GeoAssitant\bin\Debug\GeoAssitant.pdb
+C:\Users\ari4r\source\repos\VehicleTrackingApi\GeoAssitant\obj\Debug\GeoAssitant.csproj.CoreCompileInputs.cache
+C:\Users\ari4r\source\repos\VehicleTrackingApi\GeoAssitant\obj\Debug\GeoAssitant.dll
+C:\Users\ari4r\source\repos\VehicleTrackingApi\GeoAssitant\obj\Debug\GeoAssitant.pdb
+C:\Users\ari4r\source\repos\VehicleTrackingApi\GeoAssitant\obj\Debug\GeoAssitant.csproj.AssemblyReference.cache

@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="VTRACKERDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="LocationId" />
+          </Key>
+          <Property Name="LocationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Latitude" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Longitude" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="TimeStamp" Type="datetime" />
+          <Property Name="CityName" Type="varchar" MaxLength="100" />
+          <Property Name="DeviceId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Vehicle">
+          <Key>
+            <PropertyRef Name="VehicleId" />
+          </Key>
+          <Property Name="VehicleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VehicleName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="VehicleRegeisterNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TimeStamp" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VehicleDevice">
+          <Key>
+            <PropertyRef Name="DeviceId" />
+          </Key>
+          <Property Name="DeviceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DeviceName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="VehicleId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Location_VehicleDevice">
+          <End Role="VehicleDevice" Type="Self.VehicleDevice" Multiplicity="1" />
+          <End Role="Location" Type="Self.Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VehicleDevice">
+              <PropertyRef Name="DeviceId" />
+            </Principal>
+            <Dependent Role="Location">
+              <PropertyRef Name="DeviceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VehicleDevice_Vehicle">
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="VehicleDevice" Type="Self.VehicleDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicle">
+              <PropertyRef Name="VehicleId" />
+            </Principal>
+            <Dependent Role="VehicleDevice">
+              <PropertyRef Name="VehicleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="VTRACKERDBModelStoreContainer">
+          <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vehicle" EntityType="Self.Vehicle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VehicleDevice" EntityType="Self.VehicleDevice" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Location_VehicleDevice" Association="Self.FK_Location_VehicleDevice">
+            <End Role="VehicleDevice" EntitySet="VehicleDevice" />
+            <End Role="Location" EntitySet="Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VehicleDevice_Vehicle" Association="Self.FK_VehicleDevice_Vehicle">
+            <End Role="Vehicle" EntitySet="Vehicle" />
+            <End Role="VehicleDevice" EntitySet="VehicleDevice" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="VTRACKERDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="LocationId" />
+          </Key>
+          <Property Name="LocationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Latitude" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Longitude" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="TimeStamp" Type="DateTime" Precision="3" />
+          <Property Name="CityName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DeviceId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="VehicleDevice" Relationship="Self.FK_Location_VehicleDevice" FromRole="Location" ToRole="VehicleDevice" />
+        </EntityType>
+        <EntityType Name="Vehicle">
+          <Key>
+            <PropertyRef Name="VehicleId" />
+          </Key>
+          <Property Name="VehicleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VehicleName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VehicleRegeisterNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="VehicleDevices" Relationship="Self.FK_VehicleDevice_Vehicle" FromRole="Vehicle" ToRole="VehicleDevice" />
+        </EntityType>
+        <EntityType Name="VehicleDevice">
+          <Key>
+            <PropertyRef Name="DeviceId" />
+          </Key>
+          <Property Name="DeviceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DeviceName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VehicleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Locations" Relationship="Self.FK_Location_VehicleDevice" FromRole="VehicleDevice" ToRole="Location" />
+          <NavigationProperty Name="Vehicle" Relationship="Self.FK_VehicleDevice_Vehicle" FromRole="VehicleDevice" ToRole="Vehicle" />
+        </EntityType>
+        <Association Name="FK_Location_VehicleDevice">
+          <End Role="VehicleDevice" Type="Self.VehicleDevice" Multiplicity="1" />
+          <End Role="Location" Type="Self.Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VehicleDevice">
+              <PropertyRef Name="DeviceId" />
+            </Principal>
+            <Dependent Role="Location">
+              <PropertyRef Name="DeviceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VehicleDevice_Vehicle">
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="VehicleDevice" Type="Self.VehicleDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicle">
+              <PropertyRef Name="VehicleId" />
+            </Principal>
+            <Dependent Role="VehicleDevice">
+              <PropertyRef Name="VehicleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBConnection" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Locations" EntityType="Self.Location" />
+          <EntitySet Name="Vehicles" EntityType="Self.Vehicle" />
+          <EntitySet Name="VehicleDevices" EntityType="Self.VehicleDevice" />
+          <AssociationSet Name="FK_Location_VehicleDevice" Association="Self.FK_Location_VehicleDevice">
+            <End Role="VehicleDevice" EntitySet="VehicleDevices" />
+            <End Role="Location" EntitySet="Locations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VehicleDevice_Vehicle" Association="Self.FK_VehicleDevice_Vehicle">
+            <End Role="Vehicle" EntitySet="Vehicles" />
+            <End Role="VehicleDevice" EntitySet="VehicleDevices" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="VTRACKERDBModelStoreContainer" CdmEntityContainer="DBConnection">
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="VTRACKERDBModel.Location">
+              <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="DeviceId" ColumnName="DeviceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vehicles">
+            <EntityTypeMapping TypeName="VTRACKERDBModel.Vehicle">
+              <MappingFragment StoreEntitySet="Vehicle">
+                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
+                <ScalarProperty Name="VehicleName" ColumnName="VehicleName" />
+                <ScalarProperty Name="VehicleRegeisterNumber" ColumnName="VehicleRegeisterNumber" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VehicleDevices">
+            <EntityTypeMapping TypeName="VTRACKERDBModel.VehicleDevice">
+              <MappingFragment StoreEntitySet="VehicleDevice">
+                <ScalarProperty Name="DeviceId" ColumnName="DeviceId" />
+                <ScalarProperty Name="DeviceName" ColumnName="DeviceName" />
+                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
